@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DoomScroll Debug — Home</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        /* dev banner */
+        #dev-banner {
+            background-color: rgba(255, 200, 50, 0.1);
+            border-bottom: 1px solid rgba(255, 200, 50, 0.3);
+            color: #ffc832;
+            font-size: 0.8rem;
+            padding: 6px 28px;
+            text-align: center;
+            letter-spacing: 0.03em;
+        }
+        #dev-banner a {
+            color: #ffc832;
+            margin-left: 12px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="dev-banner">
+        DEV MODE — backend not connected &nbsp;|&nbsp; <a href="index.html">Go to Login page</a>
+    </div>
+
+    <header>
+        <span class="logo">DoomScroll <span class="accent">Debug</span></span>
+        <nav>
+            <button class="nav-btn active" data-target="goals-section">Goals & Streaks</button>
+            <button class="nav-btn" data-target="screentime-section">Screen Time</button>
+            <button class="nav-btn" data-target="journal-section">Journal</button>
+        </nav>
+        <button id="logout-btn">Logout</button>
+    </header>
+
+    <main>
+
+        <!-- GOALS & STREAKS -->
+        <section id="goals-section" class="view">
+            <h2>Goals & Streaks</h2>
+            <div class="card streak-card">
+                <div class="streak-number">7</div>
+                <div class="streak-label">day streak</div>
+            </div>
+            <div class="card">
+                <h3>My Goals</h3>
+                <ul id="goals-list">
+                    <li><input type="checkbox" checked /> <span class="done">No TikTok before noon</span></li>
+                    <li><input type="checkbox" /> <span>Under 30 min Instagram today</span></li>
+                    <li><input type="checkbox" checked /> <span class="done">Phone-free dinner</span></li>
+                </ul>
+                <form id="goal-form">
+                    <input type="text" placeholder="Add a new goal..." />
+                    <button type="submit">Add</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- SCREEN TIME LOG -->
+        <section id="screentime-section" class="view hidden">
+            <h2>Screen Time Log</h2>
+            <div class="card">
+                <form id="log-form">
+                    <input type="text" placeholder="App / Site (e.g. TikTok)" />
+                    <input type="number" placeholder="Minutes spent" min="1" />
+                    <button type="submit">Log It</button>
+                </form>
+            </div>
+            <div id="log-list">
+                <div class="log-entry">
+                    <span class="app-name">TikTok</span>
+                    <span class="minutes">45 min</span>
+                    <span class="log-time">Apr 7, 2026, 10:30 AM</span>
+                </div>
+                <div class="log-entry">
+                    <span class="app-name">Instagram</span>
+                    <span class="minutes">22 min</span>
+                    <span class="log-time">Apr 7, 2026, 1:15 PM</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- JOURNAL -->
+        <section id="journal-section" class="view hidden">
+            <h2>Journal</h2>
+            <div class="card">
+                <form id="journal-form">
+                    <textarea placeholder="How did scrolling make you feel today?"></textarea>
+                    <button type="submit">Save Entry</button>
+                </form>
+            </div>
+            <div id="journal-list">
+                <div class="journal-entry">
+                    <div class="entry-text">Caught myself opening Instagram 4 times without thinking. Deleted it off my home screen after dinner.</div>
+                    <div class="entry-date">Apr 7, 2026, 9:00 PM</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // nav only — no backend calls
+        document.querySelectorAll(".nav-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+                document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
+                btn.classList.add("active");
+                document.getElementById(btn.dataset.target).classList.remove("hidden");
+            });
+        });
+    </script>
+
+</body>
+</html>
