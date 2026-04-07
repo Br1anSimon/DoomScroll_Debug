@@ -7,16 +7,17 @@
     <style>
         /* dev banner */
         #dev-banner {
-            background-color: rgba(255, 200, 50, 0.1);
-            border-bottom: 1px solid rgba(255, 200, 50, 0.3);
-            color: #ffc832;
-            font-size: 0.8rem;
+            background-color: #fce4ec;
+            border-bottom: 1px dashed #f48fb1;
+            color: #9c4f72;
+            font-family: 'Caveat', cursive;
+            font-size: 1rem;
             padding: 6px 28px;
             text-align: center;
-            letter-spacing: 0.03em;
+            font-style: italic;
         }
         #dev-banner a {
-            color: #ffc832;
+            color: #c2185b;
             margin-left: 12px;
             text-decoration: underline;
             cursor: pointer;
@@ -34,7 +35,7 @@
         <nav>
             <button class="nav-btn active" data-target="goals-section">Goals & Streaks</button>
             <button class="nav-btn" data-target="screentime-section">Screen Time</button>
-            <button class="nav-btn" data-target="journal-section">Journal</button>
+            <button class="nav-btn" data-target="journal-section">Diary</button>
         </nav>
         <button id="logout-btn">Logout</button>
     </header>
@@ -86,12 +87,12 @@
             </div>
         </section>
 
-        <!-- JOURNAL -->
+        <!-- DIARY -->
         <section id="journal-section" class="view hidden">
-            <h2>Journal</h2>
+            <h2>Dear Diary...</h2>
             <div class="card">
                 <form id="journal-form">
-                    <textarea placeholder="How did scrolling make you feel today?"></textarea>
+                    <textarea placeholder="Dear diary, today I scrolled for..."></textarea>
                     <button type="submit">Save Entry</button>
                 </form>
             </div>
