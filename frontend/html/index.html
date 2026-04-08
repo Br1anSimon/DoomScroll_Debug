@@ -2,25 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DoomScroll Debug</title>
+    <title>DoomScroll Diary</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
 
-    <!-- LOGIN — DIARY COVER -->
     <section id="login-section">
         <div class="login-card">
 
-            <!-- the cover -->
             <div class="diary-cover">
-                <h1>DoomScroll <span style="opacity:0.85;">Debug</span></h1>
+                <h1>DoomScroll <span style="opacity:0.85;">Diary</span></h1>
                 <p class="subtitle">my private diary — keep out!!</p>
                 <div class="diary-strap">
                     <span class="lock-icon">🔒</span>
                 </div>
             </div>
 
-            <!-- the open pages -->
             <div class="diary-pages">
                 <form id="login-form">
                     <input type="text" id="username-input" placeholder="name..." required />
@@ -36,66 +33,17 @@
         </div>
     </section>
 
-    <!-- APP (hidden until login) -->
-    <div id="app" class="hidden">
+    <script>
+        // backend dev: replace this with a real API call to validate credentials
+        document.getElementById("login-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const username = document.getElementById("username-input").value.trim();
+            const password = document.getElementById("password-input").value.trim();
+            if (!username || !password) return;
+            // TODO: validate against backend, then redirect on success
+            window.location.href = "home.html";
+        });
+    </script>
 
-        <header>
-            <span class="logo">DoomScroll <span class="accent">Debug</span></span>
-            <nav>
-                <button class="nav-btn active" data-target="goals-section">Goals & Streaks</button>
-                <button class="nav-btn" data-target="screentime-section">Screen Time</button>
-                <button class="nav-btn" data-target="journal-section">Diary</button>
-            </nav>
-            <button id="logout-btn">Logout</button>
-        </header>
-
-        <main>
-
-            <!-- GOALS & STREAKS -->
-            <section id="goals-section" class="view">
-                <h2>Goals & Streaks</h2>
-                <div class="card streak-card">
-                    <div class="streak-number" id="streak-count">0</div>
-                    <div class="streak-label">day streak</div>
-                </div>
-                <div class="card">
-                    <h3>My Goals</h3>
-                    <ul id="goals-list"></ul>
-                    <form id="goal-form">
-                        <input type="text" id="goal-input" placeholder="Add a new goal..." />
-                        <button type="submit">Add</button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- SCREEN TIME LOG -->
-            <section id="screentime-section" class="view hidden">
-                <h2>Screen Time Log</h2>
-                <div class="card">
-                    <form id="log-form">
-                        <input type="text" id="log-app" placeholder="App / Site (e.g. TikTok)" />
-                        <input type="number" id="log-minutes" placeholder="Minutes spent" min="1" />
-                        <button type="submit">Log It</button>
-                    </form>
-                </div>
-                <div id="log-list"></div>
-            </section>
-
-            <!-- DIARY -->
-            <section id="journal-section" class="view hidden">
-                <h2>Dear Diary...</h2>
-                <div class="card">
-                    <form id="journal-form">
-                        <textarea id="journal-input" placeholder="Dear diary, today I scrolled for..."></textarea>
-                        <button type="submit">Save Entry</button>
-                    </form>
-                </div>
-                <div id="journal-list"></div>
-            </section>
-
-        </main>
-    </div>
-
-    <script src="../js/app.js"></script>
 </body>
 </html>

@@ -381,10 +381,78 @@ main {
 #goal-form input { flex: 1; }
 #goal-form button { flex-shrink: 0; }
 
+/* ── SELECT ──────────────────────────────────────────── */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: transparent;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23f48fb1' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    border: none;
+    border-bottom: 2px solid #f48fb1;
+    border-radius: 0;
+    color: #3b0a1f;
+    font-family: 'Caveat', cursive;
+    font-size: 1.15rem;
+    padding: 6px 28px 6px 4px;
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+select:focus { border-bottom-color: #c2185b; }
+select option { background-color: #fff8fb; color: #3b0a1f; font-family: sans-serif; font-size: 0.95rem; }
+
+/* ── DELETE BUTTON ───────────────────────────────────── */
+.btn-delete {
+    background: transparent;
+    border: 1px dashed #f8bbd0;
+    border-radius: 2px;
+    color: #d4a0b8;
+    cursor: pointer;
+    font-family: 'Caveat', cursive;
+    font-size: 0.95rem;
+    padding: 2px 10px;
+    box-shadow: none;
+    margin-left: auto;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    transform: none;
+}
+
+.btn-delete:hover {
+    background-color: #fce4ec;
+    border-color: #b71c1c;
+    border-style: solid;
+    color: #b71c1c;
+    box-shadow: none;
+    transform: none;
+}
+
 /* ── SCREEN TIME ─────────────────────────────────────── */
-#log-form { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
-#log-form input { flex: 1; min-width: 120px; }
-#log-form button { flex-shrink: 0; }
+.log-form-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.log-form-row select,
+.log-form-row input { flex: 1; min-width: 140px; }
+
+.log-time-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+    align-items: flex-end;
+}
+
+.log-time-row select { flex: 1; }
+
+#log-form button { margin-top: 4px; }
 
 .log-entry {
     background-color: #fff8fb;
@@ -405,6 +473,62 @@ main {
 .log-entry .app-name { font-weight: 600; font-size: 1.1rem; }
 .log-entry .minutes { color: #c2185b; font-size: 1rem; font-weight: 600; }
 .log-entry .log-time { color: #9c4f72; font-size: 0.9rem; font-style: italic; }
+
+/* ── SCREENTIME GRAPH ────────────────────────────────── */
+.screentime-graph { margin-top: 4px; }
+
+.graph-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.graph-label {
+    width: 86px;
+    flex-shrink: 0;
+    font-weight: 600;
+    color: #3b0a1f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.graph-track {
+    flex: 1;
+    height: 20px;
+    background-color: #fce4ec;
+    border: 1px solid #f8bbd0;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.graph-fill {
+    height: 100%;
+    background: linear-gradient(to right, #c2185b, #e91e8c);
+    border-radius: 2px;
+    min-width: 4px;
+}
+
+.graph-value {
+    width: 52px;
+    flex-shrink: 0;
+    font-size: 0.92rem;
+    color: #9c4f72;
+    font-style: italic;
+    text-align: right;
+}
+
+.graph-total {
+    border-top: 1px dashed #f48fb1;
+    padding-top: 10px;
+    margin-top: 4px;
+    text-align: right;
+    color: #c2185b;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
 
 /* ── DIARY ENTRIES ───────────────────────────────────── */
 #journal-form { display: flex; flex-direction: column; gap: 12px; }
@@ -434,6 +558,13 @@ main {
     line-height: 2;
     margin-bottom: 10px;
     color: #3b0a1f;
+}
+
+.entry-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
 }
 
 .journal-entry .entry-date {

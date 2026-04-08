@@ -2,36 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DoomScroll Debug — Home</title>
+    <title>DoomScroll Diary — Home</title>
     <link rel="stylesheet" href="../css/styles.css">
     <style>
-        /* dev banner */
         #dev-banner {
             background-color: #fce4ec;
             border-bottom: 1px dashed #f48fb1;
             color: #9c4f72;
             font-family: 'Caveat', cursive;
             font-size: 1rem;
-            padding: 6px 28px;
+            padding: 5px 28px;
             text-align: center;
             font-style: italic;
         }
-        #dev-banner a {
-            color: #c2185b;
-            margin-left: 12px;
-            text-decoration: underline;
-            cursor: pointer;
-        }
+        #dev-banner a { color: #c2185b; margin-left: 10px; text-decoration: none; }
     </style>
 </head>
 <body>
 
     <div id="dev-banner">
-        DEV MODE — backend not connected &nbsp;|&nbsp; <a href="index.html">Go to Login page</a>
+        ⚠ backend not yet connected &nbsp;|&nbsp; <a href="index.html">← login page</a>
     </div>
 
     <header>
-        <span class="logo">DoomScroll <span class="accent">Debug</span></span>
+        <span class="logo">DoomScroll <span class="accent">Diary</span></span>
         <nav>
             <button class="nav-btn active" data-target="goals-section">Goals & Streaks</button>
             <button class="nav-btn" data-target="screentime-section">Screen Time</button>
@@ -42,64 +36,125 @@
 
     <main>
 
-        <!-- GOALS & STREAKS -->
+        <!-- ── GOALS & STREAKS ── -->
         <section id="goals-section" class="view">
             <h2>Goals & Streaks</h2>
+
             <div class="card streak-card">
+                <!-- backend dev: streak = count of consecutive login days -->
                 <div class="streak-number">7</div>
                 <div class="streak-label">day streak</div>
             </div>
+
             <div class="card">
                 <h3>My Goals</h3>
                 <ul id="goals-list">
-                    <li><input type="checkbox" checked /> <span class="done">No TikTok before noon</span></li>
-                    <li><input type="checkbox" /> <span>Under 30 min Instagram today</span></li>
-                    <li><input type="checkbox" checked /> <span class="done">Phone-free dinner</span></li>
+                    <li>
+                        <input type="checkbox" checked />
+                        <span>No TikTok before noon</span>
+                        <button class="btn-delete" onclick="this.closest('li').remove()">✕</button>
+                    </li>
+                    <li>
+                        <input type="checkbox" />
+                        <span>Under 30 min Instagram today</span>
+                        <button class="btn-delete" onclick="this.closest('li').remove()">✕</button>
+                    </li>
+                    <li>
+                        <input type="checkbox" checked />
+                        <span>Phone-free dinner</span>
+                        <button class="btn-delete" onclick="this.closest('li').remove()">✕</button>
+                    </li>
                 </ul>
-                <form id="goal-form">
-                    <input type="text" placeholder="Add a new goal..." />
+                <form id="goal-form" onsubmit="addGoal(event)">
+                    <input type="text" id="goal-input" placeholder="Add a new goal..." />
                     <button type="submit">Add</button>
                 </form>
             </div>
         </section>
 
-        <!-- SCREEN TIME LOG -->
+        <!-- ── SCREEN TIME LOG ── -->
         <section id="screentime-section" class="view hidden">
             <h2>Screen Time Log</h2>
+
             <div class="card">
-                <form id="log-form">
-                    <input type="text" placeholder="App / Site (e.g. TikTok)" />
-                    <input type="number" placeholder="Minutes spent" min="1" />
+                <form id="log-form" onsubmit="addLogEntry(event)">
+                    <div class="log-form-row">
+                        <select id="log-app-select" onchange="toggleCustomApp(this)">
+                            <option value="">pick an app...</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="TikTok">TikTok</option>
+                            <option value="YouTube">YouTube</option>
+                            <option value="Twitter">Twitter / X</option>
+                            <option value="Snapchat">Snapchat</option>
+                            <option value="Reddit">Reddit</option>
+                            <option value="other">+ add another app</option>
+                        </select>
+                    </div>
+                    <div class="log-form-row" id="custom-app-row" style="display:none;">
+                        <input type="text" id="log-app-custom" placeholder="app name..." />
+                    </div>
+                    <div class="log-time-row">
+                        <select id="log-hours">
+                            <option value="0">0 hr</option>
+                            <option value="1">1 hr</option>
+                            <option value="2">2 hr</option>
+                            <option value="3">3 hr</option>
+                            <option value="4">4 hr</option>
+                            <option value="5">5 hr</option>
+                            <option value="6">6 hr</option>
+                        </select>
+                        <select id="log-mins">
+                            <option value="0">0 min</option>
+                            <option value="5">5 min</option>
+                            <option value="10">10 min</option>
+                            <option value="15">15 min</option>
+                            <option value="20">20 min</option>
+                            <option value="25">25 min</option>
+                            <option value="30">30 min</option>
+                            <option value="45">45 min</option>
+                        </select>
+                    </div>
                     <button type="submit">Log It</button>
                 </form>
             </div>
-            <div id="log-list">
-                <div class="log-entry">
-                    <span class="app-name">TikTok</span>
-                    <span class="minutes">45 min</span>
-                    <span class="log-time">Apr 7, 2026, 10:30 AM</span>
+
+            <!-- graph -->
+            <div class="card">
+                <h3>Today's Totals</h3>
+                <div class="screentime-graph" id="screentime-graph">
+                    <!-- rows populated by updateGraph() -->
                 </div>
-                <div class="log-entry">
-                    <span class="app-name">Instagram</span>
-                    <span class="minutes">22 min</span>
-                    <span class="log-time">Apr 7, 2026, 1:15 PM</span>
-                </div>
+                <div class="graph-total" id="graph-total"></div>
             </div>
+
+            <div id="log-list"></div>
         </section>
 
-        <!-- DIARY -->
+        <!-- ── DIARY ── -->
         <section id="journal-section" class="view hidden">
             <h2>Dear Diary...</h2>
+
             <div class="card">
-                <form id="journal-form">
-                    <textarea placeholder="Dear diary, today I scrolled for..."></textarea>
+                <form id="journal-form" onsubmit="addDiaryEntry(event)">
+                    <textarea id="journal-input" placeholder="Dear diary, today I scrolled for..."></textarea>
                     <button type="submit">Save Entry</button>
                 </form>
             </div>
+
             <div id="journal-list">
                 <div class="journal-entry">
-                    <div class="entry-text">Caught myself opening Instagram 4 times without thinking. Deleted it off my home screen after dinner.</div>
-                    <div class="entry-date">Apr 7, 2026, 9:00 PM</div>
+                    <div class="entry-text">Caught myself opening Instagram 4 times without even thinking about it. Deleted it off my home screen after dinner. Tomorrow will be better.</div>
+                    <div class="entry-meta">
+                        <span class="entry-date">Apr 7, 2026, 9:00 PM</span>
+                        <button class="btn-delete" onclick="this.closest('.journal-entry').remove()">✕ delete</button>
+                    </div>
+                </div>
+                <div class="journal-entry">
+                    <div class="entry-text">I set a timer today and actually stuck to it. Only 20 minutes of TikTok! Feeling proud of myself honestly.</div>
+                    <div class="entry-meta">
+                        <span class="entry-date">Apr 6, 2026, 8:30 PM</span>
+                        <button class="btn-delete" onclick="this.closest('.journal-entry').remove()">✕ delete</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -107,7 +162,7 @@
     </main>
 
     <script>
-        // nav only — no backend calls
+        // ── NAV ──
         document.querySelectorAll(".nav-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
@@ -116,6 +171,118 @@
                 document.getElementById(btn.dataset.target).classList.remove("hidden");
             });
         });
+
+        // ── SCREEN TIME DATA (mock) ──
+        const logData = {
+            "Instagram": 75,
+            "TikTok": 45,
+            "YouTube": 30,
+        };
+
+        function formatTime(mins) {
+            const h = Math.floor(mins / 60);
+            const m = mins % 60;
+            if (h === 0) return `${m}m`;
+            if (m === 0) return `${h}h`;
+            return `${h}h ${m}m`;
+        }
+
+        function updateGraph() {
+            const graph = document.getElementById("screentime-graph");
+            const totalEl = document.getElementById("graph-total");
+            const maxVal = Math.max(...Object.values(logData), 1);
+            const total = Object.values(logData).reduce((a, b) => a + b, 0);
+
+            if (Object.keys(logData).length === 0) {
+                graph.innerHTML = '<p style="color:#d4a0b8;font-style:italic;font-size:1rem;">no entries yet today...</p>';
+                totalEl.textContent = "";
+                return;
+            }
+
+            graph.innerHTML = Object.entries(logData).map(([app, mins]) => `
+                <div class="graph-row">
+                    <span class="graph-label">${app}</span>
+                    <div class="graph-track">
+                        <div class="graph-fill" style="width:${Math.round((mins / maxVal) * 100)}%"></div>
+                    </div>
+                    <span class="graph-value">${formatTime(mins)}</span>
+                </div>
+            `).join("");
+
+            totalEl.textContent = `total today: ${formatTime(total)}`;
+        }
+
+        updateGraph();
+
+        // ── "ADD ANOTHER APP" TOGGLE ──
+        function toggleCustomApp(select) {
+            const row = document.getElementById("custom-app-row");
+            row.style.display = select.value === "other" ? "flex" : "none";
+        }
+
+        // ── LOG IT ──
+        function addLogEntry(e) {
+            e.preventDefault();
+            const selectEl = document.getElementById("log-app-select");
+            const app = selectEl.value === "other"
+                ? document.getElementById("log-app-custom").value.trim()
+                : selectEl.value;
+            const hours = parseInt(document.getElementById("log-hours").value);
+            const mins  = parseInt(document.getElementById("log-mins").value);
+            const totalMins = hours * 60 + mins;
+            if (!app || totalMins === 0) return;
+
+            logData[app] = (logData[app] || 0) + totalMins;
+            updateGraph();
+
+            const now = new Date().toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
+            const entry = document.createElement("div");
+            entry.className = "log-entry";
+            entry.innerHTML = `
+                <span class="app-name">${app}</span>
+                <span class="minutes">${formatTime(totalMins)}</span>
+                <span class="log-time">${now}</span>
+            `;
+            document.getElementById("log-list").prepend(entry);
+            document.getElementById("log-form").reset();
+            document.getElementById("custom-app-row").style.display = "none";
+        }
+
+        // ── ADD GOAL ──
+        function addGoal(e) {
+            e.preventDefault();
+            const input = document.getElementById("goal-input");
+            const text = input.value.trim();
+            if (!text) return;
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <input type="checkbox" />
+                <span>${text}</span>
+                <button class="btn-delete" onclick="this.closest('li').remove()">✕</button>
+            `;
+            document.getElementById("goals-list").appendChild(li);
+            input.value = "";
+        }
+
+        // ── ADD DIARY ENTRY ──
+        function addDiaryEntry(e) {
+            e.preventDefault();
+            const input = document.getElementById("journal-input");
+            const text = input.value.trim();
+            if (!text) return;
+            const now = new Date().toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
+            const entry = document.createElement("div");
+            entry.className = "journal-entry";
+            entry.innerHTML = `
+                <div class="entry-text">${text}</div>
+                <div class="entry-meta">
+                    <span class="entry-date">${now}</span>
+                    <button class="btn-delete" onclick="this.closest('.journal-entry').remove()">✕ delete</button>
+                </div>
+            `;
+            document.getElementById("journal-list").prepend(entry);
+            input.value = "";
+        }
     </script>
 
 </body>
