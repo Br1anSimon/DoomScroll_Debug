@@ -34,11 +34,10 @@ def close_db(exc=None):
         db.close()
  
 def init_db():
-    """Create tables from schema.sql (plus a goals table the schema doesn't have)."""
+    """Create all tables the app needs if they don't already exist."""
     db = sqlite3.connect(DB_PATH)
     db.execute("PRAGMA foreign_keys = ON")
- 
-    # Original schema tables
+
     db.executescript("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -75,7 +74,6 @@ def init_db():
         CREATE INDEX IF NOT EXISTS idx_time_logs_user_id      ON time_logs(user_id);
         CREATE INDEX IF NOT EXISTS idx_time_logs_created_at   ON time_logs(created_at);
  
-        -- Goals table (not in original schema but used by the frontend)
         CREATE TABLE IF NOT EXISTS goals (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
@@ -85,7 +83,6 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
  
-        -- Login-day tracker for streak calculation
         CREATE TABLE IF NOT EXISTS login_days (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
