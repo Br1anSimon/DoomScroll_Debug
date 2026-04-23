@@ -284,7 +284,15 @@
                 <span class="app-name">${entry.activity}</span>
                 <span class="minutes">${formatTime(entry.duration_minutes)}</span>
                 <span class="log-time">${fmtDate(entry.created_at)}</span>
+                <button class="btn-delete">✕</button>
             `;
+            div.querySelector(".btn-delete").addEventListener("click", async () => {
+                await fetch(`${API}/screentime/${entry.id}`, { method: "DELETE", credentials: "include" });
+                logData[entry.activity] = (logData[entry.activity] || 0) - entry.duration_minutes;
+                if (logData[entry.activity] <= 0) delete logData[entry.activity];
+                updateGraph();
+                div.remove();
+            });
             return div;
         }
  
@@ -318,6 +326,10 @@
  
         async function addLogEntry(e) {
             e.preventDefault();
+            const btn = document.querySelector("#log-form button[type='submit']");
+            if (btn.disabled) return;
+            btn.disabled = true;
+ 
             const selectEl = document.getElementById("log-app-select");
             const activity = selectEl.value === "other"
                 ? document.getElementById("log-app-custom").value.trim()
@@ -325,7 +337,8 @@
             const hours = parseInt(document.getElementById("log-hours").value);
             const mins  = parseInt(document.getElementById("log-mins").value);
             const duration_minutes = hours * 60 + mins;
-            if (!activity || duration_minutes === 0) return;
+ 
+            if (!activity || duration_minutes === 0) { btn.disabled = false; return; }
  
             const res   = await fetch(`${API}/screentime`, {
                 method: "POST",
@@ -340,6 +353,7 @@
             document.getElementById("log-list").prepend(makeLogEntry(entry));
             document.getElementById("log-form").reset();
             document.getElementById("custom-app-row").style.display = "none";
+            btn.disabled = false;
         }
  
         loadScreentime();
