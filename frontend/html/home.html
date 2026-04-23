@@ -4,78 +4,45 @@
     <meta charset="UTF-8">
     <title>DoomScroll Diary — Home</title>
     <link rel="stylesheet" href="../css/styles.css">
-    <style>
-        #dev-banner {
-            background-color: #fce4ec;
-            border-bottom: 1px dashed #f48fb1;
-            color: #9c4f72;
-            font-family: 'Caveat', cursive;
-            font-size: 1rem;
-            padding: 5px 28px;
-            text-align: center;
-            font-style: italic;
-        }
-        #dev-banner a { color: #c2185b; margin-left: 10px; text-decoration: none; }
-    </style>
 </head>
 <body>
-
-    <div id="dev-banner">
-        ⚠ backend not yet connected &nbsp;|&nbsp; <a href="index.html">← login page</a>
-    </div>
-
+ 
     <header>
         <span class="logo">DoomScroll <span class="accent">Diary</span></span>
         <nav>
             <button class="nav-btn active" data-target="goals-section">Goals & Streaks</button>
             <button class="nav-btn" data-target="screentime-section">Screen Time</button>
             <button class="nav-btn" data-target="journal-section">Diary</button>
+            <button class="nav-btn" data-target="trends-section">Trends</button>
         </nav>
         <button id="logout-btn">Logout</button>
     </header>
-
+ 
     <main>
-
+ 
         <!-- ── GOALS & STREAKS ── -->
         <section id="goals-section" class="view">
             <h2>Goals & Streaks</h2>
-
+ 
             <div class="card streak-card">
-                <!-- backend dev: streak = count of consecutive login days -->
-                <div class="streak-number">7</div>
+                <div class="streak-number" id="streak-number">—</div>
                 <div class="streak-label">day streak</div>
             </div>
-
+ 
             <div class="card">
                 <h3>My Goals</h3>
-                <ul id="goals-list">
-                    <li>
-                        <input type="checkbox" checked />
-                        <span>No TikTok before noon</span>
-                        <button class="btn-delete" onclick="this.closest('li').remove()">✕</button>
-                    </li>
-                    <li>
-                        <input type="checkbox" />
-                        <span>Under 30 min Instagram today</span>
-                        <button class="btn-delete" onclick="this.closest('li').remove()">✕</button>
-                    </li>
-                    <li>
-                        <input type="checkbox" checked />
-                        <span>Phone-free dinner</span>
-                        <button class="btn-delete" onclick="this.closest('li').remove()">✕</button>
-                    </li>
-                </ul>
+                <ul id="goals-list"></ul>
                 <form id="goal-form" onsubmit="addGoal(event)">
                     <input type="text" id="goal-input" placeholder="Add a new goal..." />
                     <button type="submit">Add</button>
                 </form>
             </div>
         </section>
-
+ 
         <!-- ── SCREEN TIME LOG ── -->
         <section id="screentime-section" class="view hidden">
             <h2>Screen Time Log</h2>
-
+ 
             <div class="card">
                 <form id="log-form" onsubmit="addLogEntry(event)">
                     <div class="log-form-row">
@@ -117,88 +84,221 @@
                     <button type="submit">Log It</button>
                 </form>
             </div>
-
+ 
             <!-- graph -->
             <div class="card">
                 <h3>Today's Totals</h3>
-                <div class="screentime-graph" id="screentime-graph">
-                    <!-- rows populated by updateGraph() -->
-                </div>
+                <div class="screentime-graph" id="screentime-graph"></div>
                 <div class="graph-total" id="graph-total"></div>
             </div>
-
+ 
             <div id="log-list"></div>
         </section>
-
+ 
         <!-- ── DIARY ── -->
         <section id="journal-section" class="view hidden">
             <h2>Dear Diary...</h2>
-
+ 
             <div class="card">
                 <form id="journal-form" onsubmit="addDiaryEntry(event)">
                     <textarea id="journal-input" placeholder="Dear diary, today I scrolled for..."></textarea>
                     <button type="submit">Save Entry</button>
                 </form>
             </div>
-
-            <div id="journal-list">
-                <div class="journal-entry">
-                    <div class="entry-text">Caught myself opening Instagram 4 times without even thinking about it. Deleted it off my home screen after dinner. Tomorrow will be better.</div>
-                    <div class="entry-meta">
-                        <span class="entry-date">Apr 7, 2026, 9:00 PM</span>
-                        <button class="btn-delete" onclick="this.closest('.journal-entry').remove()">✕ delete</button>
-                    </div>
+ 
+            <div id="journal-list"></div>
+        </section>
+ 
+        <!-- ── TRENDS ── -->
+        <section id="trends-section" class="view hidden">
+            <h2>Trends</h2>
+ 
+            <div class="trend-stats">
+                <div class="trend-stat-card">
+                    <div class="trend-stat-value" id="trend-avg">—</div>
+                    <div class="trend-stat-label">daily avg (7d)</div>
                 </div>
-                <div class="journal-entry">
-                    <div class="entry-text">I set a timer today and actually stuck to it. Only 20 minutes of TikTok! Feeling proud of myself honestly.</div>
-                    <div class="entry-meta">
-                        <span class="entry-date">Apr 6, 2026, 8:30 PM</span>
-                        <button class="btn-delete" onclick="this.closest('.journal-entry').remove()">✕ delete</button>
-                    </div>
+                <div class="trend-stat-card">
+                    <div class="trend-stat-value" id="trend-top-app">—</div>
+                    <div class="trend-stat-label">most used app</div>
+                </div>
+                <div class="trend-stat-card">
+                    <div class="trend-stat-value" id="trend-worst">—</div>
+                    <div class="trend-stat-label">worst day</div>
+                </div>
+                <div class="trend-stat-card">
+                    <div class="trend-stat-value" id="trend-best">—</div>
+                    <div class="trend-stat-label">best day</div>
+                </div>
+            </div>
+ 
+            <div class="card">
+                <h3>Last 7 Days</h3>
+                <div id="trend-chart">
+                    <p style="color:#d4a0b8;font-style:italic;">no data yet...</p>
+                </div>
+            </div>
+ 
+            <div class="card">
+                <h3>By App (7 days)</h3>
+                <div class="screentime-graph" id="trend-by-app">
+                    <p style="color:#d4a0b8;font-style:italic;">no data yet...</p>
                 </div>
             </div>
         </section>
-
+ 
     </main>
-
+ 
     <script>
-        // ── NAV ──
+        const API = "http://localhost:5000/api";
+ 
+        // ─── Guard: redirect to login if no session ───────────────────────────
+        async function checkAuth() {
+            try {
+                const res = await fetch(`${API}/me`, { credentials: "include" });
+                if (!res.ok) window.location.href = "/";
+            } catch {
+                window.location.href = "/";
+            }
+        }
+        checkAuth();
+ 
+        // ── NAV ───────────────────────────────────────────────────────────────
         document.querySelectorAll(".nav-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
                 document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
                 btn.classList.add("active");
                 document.getElementById(btn.dataset.target).classList.remove("hidden");
+                if (btn.dataset.target === "trends-section") loadTrends();
             });
         });
-
-        // ── SCREEN TIME DATA (mock) ──
-        const logData = {
-            "Instagram": 75,
-            "TikTok": 45,
-            "YouTube": 30,
-        };
-
+ 
+        // ── LOGOUT ────────────────────────────────────────────────────────────
+        document.getElementById("logout-btn").addEventListener("click", async () => {
+            await fetch(`${API}/logout`, { method: "POST", credentials: "include" });
+            window.location.href = "/";
+        });
+ 
+        // ── HELPERS ───────────────────────────────────────────────────────────
         function formatTime(mins) {
-            const h = Math.floor(mins / 60);
-            const m = mins % 60;
+            const h = Math.floor(mins / 60), m = mins % 60;
             if (h === 0) return `${m}m`;
             if (m === 0) return `${h}h`;
             return `${h}h ${m}m`;
         }
-
+ 
+        function fmtDate(iso) {
+            return new Date(iso).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
+        }
+ 
+        function fmtShortDate(iso) {
+            return new Date(iso + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        }
+ 
+        // ═══════════════════════════════════════════════════════════════════════
+        // STREAK
+        // ═══════════════════════════════════════════════════════════════════════
+        async function loadStreak() {
+            const res  = await fetch(`${API}/streak`, { credentials: "include" });
+            const data = await res.json();
+            document.getElementById("streak-number").textContent = data.streak ?? "—";
+        }
+        loadStreak();
+ 
+        // ═══════════════════════════════════════════════════════════════════════
+        // GOALS
+        // ═══════════════════════════════════════════════════════════════════════
+        async function loadGoals() {
+            const res  = await fetch(`${API}/goals`, { credentials: "include" });
+            const list = await res.json();
+            const ul   = document.getElementById("goals-list");
+            ul.innerHTML = "";
+            list.forEach(g => ul.appendChild(makeGoalLi(g)));
+        }
+ 
+        function makeGoalLi(goal) {
+            const li = document.createElement("li");
+            li.dataset.id = goal.id;
+            li.innerHTML = `
+                <input type="checkbox" ${goal.completed ? "checked" : ""} />
+                <span>${goal.text}</span>
+                <button class="btn-delete">✕</button>
+            `;
+            li.querySelector("input").addEventListener("change", async (e) => {
+                await fetch(`${API}/goals/${goal.id}`, {
+                    method: "PATCH",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ completed: e.target.checked }),
+                });
+            });
+            li.querySelector(".btn-delete").addEventListener("click", async () => {
+                await fetch(`${API}/goals/${goal.id}`, { method: "DELETE", credentials: "include" });
+                li.remove();
+            });
+            return li;
+        }
+ 
+        async function addGoal(e) {
+            e.preventDefault();
+            const input = document.getElementById("goal-input");
+            const text  = input.value.trim();
+            if (!text) return;
+            const res  = await fetch(`${API}/goals`, {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text }),
+            });
+            const goal = await res.json();
+            document.getElementById("goals-list").appendChild(makeGoalLi(goal));
+            input.value = "";
+        }
+ 
+        loadGoals();
+ 
+        // ═══════════════════════════════════════════════════════════════════════
+        // SCREEN TIME
+        // ═══════════════════════════════════════════════════════════════════════
+        let logData = {};
+ 
+        async function loadScreentime() {
+            const res  = await fetch(`${API}/screentime`, { credentials: "include" });
+            const list = await res.json();
+            logData = {};
+            const logListEl = document.getElementById("log-list");
+            logListEl.innerHTML = "";
+            list.forEach(entry => {
+                logData[entry.activity] = (logData[entry.activity] || 0) + entry.duration_minutes;
+                logListEl.appendChild(makeLogEntry(entry));
+            });
+            updateGraph();
+        }
+ 
+        function makeLogEntry(entry) {
+            const div = document.createElement("div");
+            div.className   = "log-entry";
+            div.dataset.id  = entry.id;
+            div.innerHTML = `
+                <span class="app-name">${entry.activity}</span>
+                <span class="minutes">${formatTime(entry.duration_minutes)}</span>
+                <span class="log-time">${fmtDate(entry.created_at)}</span>
+            `;
+            return div;
+        }
+ 
         function updateGraph() {
-            const graph = document.getElementById("screentime-graph");
+            const graph   = document.getElementById("screentime-graph");
             const totalEl = document.getElementById("graph-total");
-            const maxVal = Math.max(...Object.values(logData), 1);
-            const total = Object.values(logData).reduce((a, b) => a + b, 0);
-
+            const maxVal  = Math.max(...Object.values(logData), 1);
+            const total   = Object.values(logData).reduce((a, b) => a + b, 0);
+ 
             if (Object.keys(logData).length === 0) {
                 graph.innerHTML = '<p style="color:#d4a0b8;font-style:italic;font-size:1rem;">no entries yet today...</p>';
                 totalEl.textContent = "";
                 return;
             }
-
             graph.innerHTML = Object.entries(logData).map(([app, mins]) => `
                 <div class="graph-row">
                     <span class="graph-label">${app}</span>
@@ -208,82 +308,155 @@
                     <span class="graph-value">${formatTime(mins)}</span>
                 </div>
             `).join("");
-
             totalEl.textContent = `total today: ${formatTime(total)}`;
         }
-
-        updateGraph();
-
-        // ── "ADD ANOTHER APP" TOGGLE ──
+ 
         function toggleCustomApp(select) {
             const row = document.getElementById("custom-app-row");
             row.style.display = select.value === "other" ? "flex" : "none";
         }
-
-        // ── LOG IT ──
-        function addLogEntry(e) {
+ 
+        async function addLogEntry(e) {
             e.preventDefault();
             const selectEl = document.getElementById("log-app-select");
-            const app = selectEl.value === "other"
+            const activity = selectEl.value === "other"
                 ? document.getElementById("log-app-custom").value.trim()
                 : selectEl.value;
             const hours = parseInt(document.getElementById("log-hours").value);
             const mins  = parseInt(document.getElementById("log-mins").value);
-            const totalMins = hours * 60 + mins;
-            if (!app || totalMins === 0) return;
-
-            logData[app] = (logData[app] || 0) + totalMins;
+            const duration_minutes = hours * 60 + mins;
+            if (!activity || duration_minutes === 0) return;
+ 
+            const res   = await fetch(`${API}/screentime`, {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ activity, duration_minutes }),
+            });
+            const entry = await res.json();
+ 
+            logData[entry.activity] = (logData[entry.activity] || 0) + entry.duration_minutes;
             updateGraph();
-
-            const now = new Date().toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
-            const entry = document.createElement("div");
-            entry.className = "log-entry";
-            entry.innerHTML = `
-                <span class="app-name">${app}</span>
-                <span class="minutes">${formatTime(totalMins)}</span>
-                <span class="log-time">${now}</span>
-            `;
-            document.getElementById("log-list").prepend(entry);
+            document.getElementById("log-list").prepend(makeLogEntry(entry));
             document.getElementById("log-form").reset();
             document.getElementById("custom-app-row").style.display = "none";
         }
-
-        // ── ADD GOAL ──
-        function addGoal(e) {
-            e.preventDefault();
-            const input = document.getElementById("goal-input");
-            const text = input.value.trim();
-            if (!text) return;
-            const li = document.createElement("li");
-            li.innerHTML = `
-                <input type="checkbox" />
-                <span>${text}</span>
-                <button class="btn-delete" onclick="this.closest('li').remove()">✕</button>
-            `;
-            document.getElementById("goals-list").appendChild(li);
-            input.value = "";
+ 
+        loadScreentime();
+ 
+        // ═══════════════════════════════════════════════════════════════════════
+        // JOURNAL
+        // ═══════════════════════════════════════════════════════════════════════
+        async function loadJournal() {
+            const res  = await fetch(`${API}/journal`, { credentials: "include" });
+            const list = await res.json();
+            const el   = document.getElementById("journal-list");
+            el.innerHTML = "";
+            list.forEach(entry => el.appendChild(makeJournalEntry(entry)));
         }
-
-        // ── ADD DIARY ENTRY ──
-        function addDiaryEntry(e) {
-            e.preventDefault();
-            const input = document.getElementById("journal-input");
-            const text = input.value.trim();
-            if (!text) return;
-            const now = new Date().toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
-            const entry = document.createElement("div");
-            entry.className = "journal-entry";
-            entry.innerHTML = `
-                <div class="entry-text">${text}</div>
+ 
+        function makeJournalEntry(entry) {
+            const div      = document.createElement("div");
+            div.className  = "journal-entry";
+            div.dataset.id = entry.id;
+            div.innerHTML  = `
+                <div class="entry-text">${entry.content}</div>
                 <div class="entry-meta">
-                    <span class="entry-date">${now}</span>
-                    <button class="btn-delete" onclick="this.closest('.journal-entry').remove()">✕ delete</button>
+                    <span class="entry-date">${fmtDate(entry.created_at)}</span>
+                    <button class="btn-delete">✕ delete</button>
                 </div>
             `;
-            document.getElementById("journal-list").prepend(entry);
+            div.querySelector(".btn-delete").addEventListener("click", async () => {
+                await fetch(`${API}/journal/${entry.id}`, { method: "DELETE", credentials: "include" });
+                div.remove();
+            });
+            return div;
+        }
+ 
+        async function addDiaryEntry(e) {
+            e.preventDefault();
+            const input   = document.getElementById("journal-input");
+            const content = input.value.trim();
+            if (!content) return;
+            const res   = await fetch(`${API}/journal`, {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content }),
+            });
+            const entry = await res.json();
+            document.getElementById("journal-list").prepend(makeJournalEntry(entry));
             input.value = "";
         }
+ 
+        loadJournal();
+ 
+        // ═══════════════════════════════════════════════════════════════════════
+        // TRENDS
+        // ═══════════════════════════════════════════════════════════════════════
+        async function loadTrends() {
+            const res  = await fetch(`${API}/trends`, { credentials: "include" });
+            const data = await res.json();
+ 
+            // ── Summary cards ──
+            document.getElementById("trend-avg").textContent =
+                data.daily_average > 0 ? formatTime(data.daily_average) : "—";
+ 
+            document.getElementById("trend-top-app").textContent =
+                data.by_app.length > 0 ? data.by_app[0].activity : "—";
+ 
+            document.getElementById("trend-worst").textContent =
+                data.worst_day && data.worst_day.total_minutes > 0
+                    ? fmtShortDate(data.worst_day.date) + " · " + formatTime(data.worst_day.total_minutes)
+                    : "—";
+ 
+            document.getElementById("trend-best").textContent =
+                data.best_day && data.best_day.total_minutes > 0
+                    ? fmtShortDate(data.best_day.date) + " · " + formatTime(data.best_day.total_minutes)
+                    : "—";
+ 
+            // ── 7-day bar chart ──
+            const chartEl = document.getElementById("trend-chart");
+            const maxVal  = Math.max(...data.daily_totals.map(d => d.total_minutes), 1);
+            const hasData = data.daily_totals.some(d => d.total_minutes > 0);
+ 
+            if (!hasData) {
+                chartEl.innerHTML = '<p style="color:#d4a0b8;font-style:italic;">no data yet...</p>';
+            } else {
+                chartEl.innerHTML = `
+                    <div class="bar-chart">
+                        ${data.daily_totals.map(d => `
+                            <div class="bar-col">
+                                <div class="bar-value">${d.total_minutes > 0 ? formatTime(d.total_minutes) : ""}</div>
+                                <div class="bar-wrap">
+                                    <div class="bar-fill" style="height:${Math.round((d.total_minutes / maxVal) * 100)}%"></div>
+                                </div>
+                                <div class="bar-label">${fmtShortDate(d.date)}</div>
+                            </div>
+                        `).join("")}
+                    </div>
+                `;
+            }
+ 
+            // ── By-app breakdown ──
+            const appEl  = document.getElementById("trend-by-app");
+            const appMax = data.by_app.length > 0 ? data.by_app[0].total_minutes : 1;
+ 
+            if (data.by_app.length === 0) {
+                appEl.innerHTML = '<p style="color:#d4a0b8;font-style:italic;">no data yet...</p>';
+            } else {
+                appEl.innerHTML = data.by_app.map(a => `
+                    <div class="graph-row">
+                        <span class="graph-label">${a.activity}</span>
+                        <div class="graph-track">
+                            <div class="graph-fill" style="width:${Math.round((a.total_minutes / appMax) * 100)}%"></div>
+                        </div>
+                        <span class="graph-value">${formatTime(a.total_minutes)}</span>
+                    </div>
+                `).join("");
+            }
+        }
     </script>
-
+ 
 </body>
 </html>
