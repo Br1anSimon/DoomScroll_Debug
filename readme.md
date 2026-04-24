@@ -1,116 +1,66 @@
 # Doomscroll Diary ReadME
 
-**Intro**
+**Project Overview and Purpose**
 ---
 
 DoomScroll Diary focuses on reducing social media usage, it does so in a plethora of ways. The product allows the user to set goals, maintain a streak, document amount of screentime on different social media apps, record thoughts on the diary feature, and look back at past records.
 
-Whether you're trying to cut down on social media, improve focus, or just better understand your habits, Doomscroll Diary will help you reduce your social media usage. 
-
----
-
 **Features**
 
-* **Manual Screen Time Logging**
-  Log how long you spend on specific apps or websites.
+* **Streak Tracker:**
+  A streak pertaining the amount of days using the app, to further promote usage of our product.
 
 * **Daily Usage Overview**
-  View a breakdown of where your time goes each day.
+  A breakdown giving the stats on screentime on different social medias. 
 
-* **Category Tagging**
-  Organize usage (e.g., Social Media, Work, Entertainment, Productivity).
+* **Creating Personalized Goals**
+  User can write and checkmark goals based on events in daily life.
 
-* **Simple & Clean UI**
+* **Website UI**
   No clutter, no distractions—just your data.
 
-* **Privacy First**
-  No tracking scripts, no data selling, no background monitoring.
+* **Diary**
+  Create personal writings similar to blog posts that allow the user to reflect on their day and review past days.
 
 ---
 
-## 🛠️ How It Works
-
-1. Open the app in your browser.
-2. Add a new entry:
-
-   * App/Website name
-   * Time spent
-   * Optional category or notes
-3. Save your entry.
-4. Review your daily totals and patterns.
-
-That’s it—no permissions, no syncing required.
 
 ---
 
-## 🎯 Use Cases
+## Installing and Opening in Browser
 
-* Reducing social media overuse
-* Tracking productivity vs. distraction
-* Building mindful tech habits
-* Supporting digital wellness routines
-
----
-
-## 🧠 Why “Doomscroll Debug”?
-
-Endless scrolling can feel like a bug in your daily routine. This app treats your screen habits like a system you can inspect, understand, and improve—just like debugging code.
+1. Git clone https://github.com/your-username/doomscroll-debug.git
+2. cd doomscroll-diary
+3. npm install, then npm run dev
+4. DoomScroll Diary is opened in browser 
+5. Write in dairy/log screen time/set a goal 
+6. Save your entry.
+7. Review your past daily totals and patterns.
 
 ---
 
-## 📦 Installation / Setup
+## Tech Stack Summary
 
-```bash
-# Clone the repository
-git clone https://github.com/your-username/doomscroll-debug.git
+backend: Coded with python and uses SQLite as the database.
 
-# Navigate into the project
-cd doomscroll-debug
+frontend: Coded with HTML and CSS.
 
-# Install dependencies
-npm install
+Dockerfile: Deploys and runs app. 
 
-# Run the development server
-npm run dev
-```
+DoomScroll_Diary.iml: Tells the IDE to treat folder as project module. 
 
-Then open your browser at `http://localhost:3000`.
+# Team Members and their Contributions
 
----
+Jacob Klinedinst:
 
-## 🔒 Privacy
+Brian:
 
-Doomscroll Debug does **not**:
+Cole Caron:
 
-* Track your activity automatically
-* Collect personal data
-* Send usage data to external servers
+Lena:
 
-All data is stored locally (or according to your implementation).
+Shin:
 
----
+James Casella: 
 
-## 🧪 Future Improvements
 
-* Data visualization (charts/graphs)
-* Weekly/monthly summaries
-* Optional reminders to log usage
-* Export/import data
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests to improve the app.
-
----
-
-## 📄 License
-
-MIT License
-
----
-
-## 💡 Final Note
-
-You can’t fix what you don’t measure—but you also shouldn’t be surveilled to measure it. Doomscroll Debug strikes a balance: awareness without intrusion.
