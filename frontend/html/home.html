@@ -15,6 +15,7 @@
             <button class="nav-btn" data-target="journal-section">Diary</button>
             <button class="nav-btn" data-target="trends-section">Trends</button>
         </nav>
+        <button class="nav-btn" id="settings-btn">⚙ Settings</button>
         <button id="logout-btn">Logout</button>
     </header>
  
@@ -470,7 +471,90 @@
                 `).join("");
             }
         }
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // SETTINGS (change password)
+        // ═══════════════════════════════════════════════════════════════════════
+        const overlay = document.getElementById("settings-overlay");
+
+        document.getElementById("settings-btn").addEventListener("click", () => {
+            document.getElementById("change-pw-form").reset();
+            document.getElementById("pw-message").textContent = "";
+            overlay.style.display = "flex";
+        });
+
+        document.getElementById("settings-close-btn").addEventListener("click", () => {
+            overlay.style.display = "none";
+        });
+
+        overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) overlay.style.display = "none";
+        });
+
+        document.getElementById("change-pw-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const msgEl      = document.getElementById("pw-message");
+            const currentPw  = document.getElementById("current-pw").value;
+            const newPw      = document.getElementById("new-pw").value;
+            const confirmPw  = document.getElementById("confirm-pw").value;
+
+            if (newPw !== confirmPw) {
+                msgEl.style.color = "#e57373";
+                msgEl.textContent = "new passwords don't match!";
+                return;
+            }
+            if (newPw.length < 6) {
+                msgEl.style.color = "#e57373";
+                msgEl.textContent = "password must be at least 6 characters";
+                return;
+            }
+
+            try {
+                const res  = await fetch(`${API}/change-password`, {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ current_password: currentPw, new_password: newPw }),
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    msgEl.style.color = "#e57373";
+                    msgEl.textContent = data.error || "Something went wrong :(";
+                } else {
+                    msgEl.style.color = "#81c784";
+                    msgEl.textContent = "✓ password updated!";
+                    document.getElementById("change-pw-form").reset();
+                    setTimeout(() => { overlay.style.display = "none"; }, 1500);
+                }
+            } catch {
+                msgEl.style.color = "#e57373";
+                msgEl.textContent = "Can't reach server :(";
+            }
+        });
     </script>
  
+    <!-- ── SETTINGS MODAL ── -->
+    <div id="settings-overlay" style="display:none; position:fixed; inset:0; background:rgba(20,10,18,0.75); z-index:100; display:none; align-items:center; justify-content:center;">
+        <div class="login-card" style="width:100%; max-width:420px; margin:auto;">
+            <div class="diary-cover" style="padding:18px 24px;">
+                <h1 style="font-size:1.6rem;">⚙ Settings</h1>
+                <p class="subtitle">change your password</p>
+            </div>
+            <div class="diary-pages">
+                <form id="change-pw-form">
+                    <input type="password" id="current-pw" placeholder="current password..." required />
+                    <input type="password" id="new-pw"     placeholder="new password..." required />
+                    <input type="password" id="confirm-pw" placeholder="confirm new password..." required />
+                    <div style="display:flex; gap:10px; margin-top:4px;">
+                        <button type="submit" style="flex:1;">update ✦</button>
+                        <button type="button" id="settings-close-btn" style="flex:1; background:#3a2035;">cancel</button>
+                    </div>
+                </form>
+                <p id="pw-message" style="text-align:center; margin-top:10px; font-family:'Caveat',cursive; font-size:1rem;"></p>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

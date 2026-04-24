@@ -14,6 +14,20 @@ app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "../
 app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(32))
 CORS(app, supports_credentials=True)
 
+# ── Security headers ───────────────────────────────────────────────────────────
+
+@app.after_request
+def set_security_headers(response):
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline'; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data:; "
+        "connect-src 'self' http://localhost:5000 http://127.0.0.1:5000;"
+    )
+    return response
+
 DB_PATH = os.path.join(os.path.dirname(__file__), "doomscroll.db")
 
 # ── Database helpers ───────────────────────────────────────────────────────────
