@@ -16,9 +16,6 @@ DoomScroll Diary focuses on reducing social media usage, allowing users to set g
 * **Creating Personalized Goals**
   User can write and checkmark goals based on their screentime.
 
-* **Website UI**
-  No clutter, no distractions. 
-
 * **Diary**
   Create personal entries like a diary, that allow the user to reflect on their screentime and review past days.
 
