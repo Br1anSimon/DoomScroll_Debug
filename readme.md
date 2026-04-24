@@ -24,9 +24,6 @@ DoomScroll Diary focuses on reducing social media usage, it does so in a plethor
 
 ---
 
-
----
-
 ## Installing and Opening in Browser
 
 1. Git clone https://github.com/your-username/doomscroll-debug.git
@@ -48,6 +45,8 @@ frontend: Coded with HTML and CSS.
 Dockerfile: Deploys and runs app. 
 
 DoomScroll_Diary.iml: Tells the IDE to treat folder as project module. 
+
+---
 
 # Team Members and their Contributions
 
