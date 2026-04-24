@@ -51,7 +51,7 @@ Jacob Klinedinst:
 
 Brian:
 
-Cole Caron:
+Cole Caron: Collaborated on backend communication with the database and the UI
 
 Lena: Collaborated on docker setup and deployment and ReadMe.
 
