@@ -57,6 +57,7 @@ Lena: Collaborated on docker setup and deployment and ReadMe.
 
 Shin:
 
-James Casella: 
+James Casella: Worked on UI for adding quotes and made the README. 
+
 
 
