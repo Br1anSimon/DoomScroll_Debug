@@ -1,20 +1,15 @@
-# this is straight from chat so change it later ig? 
+# Doomscroll Diary ReadME
 
-# Doomscroll Debug
+**Intro**
+---
 
-**Doomscroll Debug** is a simple, privacy-friendly web app designed to help you become more aware of your screen time habits. Instead of passively losing hours to endless scrolling, this tool lets you actively log and reflect on how you spend time across apps and websites.
+DoomScroll Diary focuses on reducing social media usage, it does so in a plethora of ways. The product allows the user to set goals, maintain a streak, document amount of screentime on different social media apps, record thoughts on the diary feature, and look back at past records.
+
+Whether you're trying to cut down on social media, improve focus, or just better understand your habits, Doomscroll Diary will help you reduce your social media usage. 
 
 ---
 
-## 🚀 Overview
-
-Doomscroll Debug gives you a lightweight way to track your daily screen usage without invasive tracking or background monitoring. You manually log your usage sessions, making the process intentional and reflective rather than automatic.
-
-Whether you're trying to cut down on social media, improve focus, or just understand your habits better, Doomscroll Debug helps you "debug" your digital life.
-
----
-
-## ✨ Features
+**Features**
 
 * **Manual Screen Time Logging**
   Log how long you spend on specific apps or websites.
