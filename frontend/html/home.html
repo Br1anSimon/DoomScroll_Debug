@@ -149,7 +149,29 @@
         </section>
  
     </main>
- 
+
+    <!-- ── SETTINGS MODAL ── -->
+    <div id="settings-overlay" style="display:none; position:fixed; inset:0; background:rgba(20,10,18,0.75); z-index:100; align-items:center; justify-content:center;">
+        <div class="login-card" style="width:100%; max-width:420px; margin:auto;">
+            <div class="diary-cover" style="padding:18px 24px;">
+                <h1 style="font-size:1.6rem;">⚙ Settings</h1>
+                <p class="subtitle">change your password</p>
+            </div>
+            <div class="diary-pages">
+                <form id="change-pw-form">
+                    <input type="password" id="current-pw" placeholder="current password..." required />
+                    <input type="password" id="new-pw"     placeholder="new password..." required />
+                    <input type="password" id="confirm-pw" placeholder="confirm new password..." required />
+                    <div style="display:flex; gap:10px; margin-top:4px;">
+                        <button type="submit" style="flex:1;">update ✦</button>
+                        <button type="button" id="settings-close-btn" style="flex:1; background:#3a2035;">cancel</button>
+                    </div>
+                </form>
+                <p id="pw-message" style="text-align:center; margin-top:10px; font-family:'Caveat',cursive; font-size:1rem;"></p>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API = "http://localhost:5000/api";
  
@@ -534,27 +556,5 @@
         });
     </script>
  
-    <!-- ── SETTINGS MODAL ── -->
-    <div id="settings-overlay" style="display:none; position:fixed; inset:0; background:rgba(20,10,18,0.75); z-index:100; display:none; align-items:center; justify-content:center;">
-        <div class="login-card" style="width:100%; max-width:420px; margin:auto;">
-            <div class="diary-cover" style="padding:18px 24px;">
-                <h1 style="font-size:1.6rem;">⚙ Settings</h1>
-                <p class="subtitle">change your password</p>
-            </div>
-            <div class="diary-pages">
-                <form id="change-pw-form">
-                    <input type="password" id="current-pw" placeholder="current password..." required />
-                    <input type="password" id="new-pw"     placeholder="new password..." required />
-                    <input type="password" id="confirm-pw" placeholder="confirm new password..." required />
-                    <div style="display:flex; gap:10px; margin-top:4px;">
-                        <button type="submit" style="flex:1;">update ✦</button>
-                        <button type="button" id="settings-close-btn" style="flex:1; background:#3a2035;">cancel</button>
-                    </div>
-                </form>
-                <p id="pw-message" style="text-align:center; margin-top:10px; font-family:'Caveat',cursive; font-size:1rem;"></p>
-            </div>
-        </div>
-    </div>
-
 </body>
 </html>
