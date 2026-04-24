@@ -10,13 +10,13 @@ DoomScroll Diary focuses on reducing social media usage, allowing users to set g
 * **Streak Tracker:**
   A streak counting the consecutive days a user logged time on the app, to further promote usage of our product.
 
-* **Daily Usage Overview**
+* **Daily Usage Overview:**
   A breakdown giving the stats of screentime on different apps. 
 
-* **Creating Personalized Goals**
+* **Creating Personalized Goals:**
   User can write and checkmark goals based on their screentime.
 
-* **Diary**
+* **Diary:**
   Create personal entries like a diary, that allow the user to reflect on their screentime and review past days.
 
 ---
