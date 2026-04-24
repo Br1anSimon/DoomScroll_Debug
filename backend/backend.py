@@ -425,6 +425,34 @@ def delete_journal(entry_id):
         return jsonify({"error": "Entry not found"}), 404
     return jsonify({"deleted": entry_id})
 
+# ── Account settings ───────────────────────────────────────────────────────────
+
+@app.route("/api/change-password", methods=["POST"])
+@login_required
+def change_password():
+    data       = request.get_json(force=True)
+    current_pw = (data.get("current_password") or "").strip()
+    new_pw     = (data.get("new_password")     or "").strip()
+
+    if not current_pw or not new_pw:
+        return jsonify({"error": "current_password and new_password are required"}), 400
+
+    if len(new_pw) < 6:
+        return jsonify({"error": "New password must be at least 6 characters"}), 400
+
+    db   = get_db()
+    user = db.execute("SELECT * FROM users WHERE id = ?", (current_user_id(),)).fetchone()
+
+    if user["password"] != hash_password(current_pw):
+        return jsonify({"error": "Current password is incorrect"}), 401
+
+    db.execute(
+        "UPDATE users SET password = ?, updated_at = datetime('now') WHERE id = ?",
+        (hash_password(new_pw), current_user_id())
+    )
+    db.commit()
+    return jsonify({"message": "Password updated successfully"})
+
 # ── Entry point ────────────────────────────────────────────────────────────────
 
 @app.route("/")
