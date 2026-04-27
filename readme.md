@@ -44,16 +44,16 @@ DoomScroll_Diary.iml: Tells the IDE to treat folder as project module.
 
 # Team Members and their Contributions
 
-Jacob Klinedinst: Implemented database, schema and connection with UI.
+Jacob Klinedinst:
 
-Brian: Implemented front end and UI features, collaborated on deployment.
+Brian:
 
-Cole Caron: Collaborated on backend communication with the database and the UI.
+Cole Caron:
 
-Lena: Collaborated on docker setup, deployment, ReadMe and frontend implementation.
+Lena: Collaborated on docker setup and deployment and ReadMe.
 
-Shin: Implemented various features including settings tab and change password.
+Shin:
 
-James Casella: Implemented various features including.....
+James Casella: 
 
 
