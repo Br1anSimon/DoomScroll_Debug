@@ -63,6 +63,7 @@ def init_db():
             user_id INTEGER NOT NULL,
             title TEXT,
             content TEXT NOT NULL,
+            feeling_rating INTEGER,
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now')),
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -96,6 +97,10 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
     """)
+    columns = db.execute("PRAGMA table_info(journal_entries)").fetchall()
+    column_names = {col[1] for col in columns}
+    if "feeling_rating" not in column_names:
+        db.execute("ALTER TABLE journal_entries ADD COLUMN feeling_rating INTEGER")
     db.commit()
     db.close()
 
@@ -401,14 +406,21 @@ def add_journal():
     data    = request.get_json(force=True)
     content = (data.get("content") or "").strip()
     title   = (data.get("title")   or "").strip() or None
+    feeling_rating = data.get("feeling_rating")
 
     if not content:
         return jsonify({"error": "content required"}), 400
+    try:
+        feeling_rating = int(feeling_rating)
+    except (TypeError, ValueError):
+        return jsonify({"error": "feeling_rating required"}), 400
+    if feeling_rating < 1 or feeling_rating > 5:
+        return jsonify({"error": "feeling_rating must be between 1 and 5"}), 400
 
     db  = get_db()
     cur = db.execute(
-        "INSERT INTO journal_entries (user_id, title, content) VALUES (?, ?, ?)",
-        (current_user_id(), title, content)
+        "INSERT INTO journal_entries (user_id, title, content, feeling_rating) VALUES (?, ?, ?, ?)",
+        (current_user_id(), title, content, feeling_rating)
     )
     db.commit()
     row = db.execute(
