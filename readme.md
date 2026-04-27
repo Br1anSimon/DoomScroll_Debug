@@ -1,62 +1,112 @@
-# Doomscroll Diary ReadME
+# DoomScroll Diary
 
-**Project Overview and Purpose**
----
+DoomScroll Diary is a small Flask web app for tracking social media habits. Users can create an account, log daily screen time, set personal goals, maintain a login streak, write journal entries, and rate how they felt for each journal entry.
 
-DoomScroll Diary focuses on reducing social media usage, allowing users to set goals, maintain a streak, document their screentime on different social media apps, record thoughts with the diary feature, and look back at past records.
+## Features
 
-**Features**
+- **Account login and registration:** Users can create an account and keep their entries tied to their session.
+- **Goals and streaks:** Users can add goals, mark them complete, and see their current login streak.
+- **Screen time log:** Users can record time spent on common apps or a custom app.
+- **Trends:** The app summarizes the last 7 days of logged screen time and shows app-by-app totals.
+- **Diary:** Users can save journal entries and select a 1-5 feeling rating with emojis from upset to happy.
+- **Settings:** Users can change their password from the settings modal.
 
-* **Streak Tracker:**
-  A streak counting the consecutive days a user logged time on the app, to further promote usage of our product.
+## Tech Stack
 
-* **Daily Usage Overview**
-  A breakdown giving the stats of screentime on different apps. 
+- **Backend:** Python, Flask, Flask-CORS, SQLite.
+- **Frontend:** HTML, CSS, and inline browser JavaScript served by Flask.
+- **Database:** `backend/doomscroll.db` is created locally when the Flask app starts.
+- **Container:** The Dockerfile builds a Python image and runs the Flask backend.
 
-* **Creating Personalized Goals**
-  User can write and checkmark goals based on their screentime.
+## Project Structure
 
-* **Website UI**
-  No clutter, no distractions. 
+```text
+backend/
+  backend.py          Flask app, API routes, database setup, static file serving
+  README.md           Backend-specific setup, database, and API documentation
+  requirements.txt    Python dependencies
+  .gitignore          Ignores the local SQLite database
+frontend/
+  html/index.html     Login and registration page
+  html/home.html      Main authenticated app UI
+  css/styles.css      App styling
+  js/app.js           Reserved for future frontend JavaScript
+Dockerfile            Container build for the Flask app
+readme.md             Project documentation
+```
 
-* **Diary**
-  Create personal entries like a diary, that allow the user to reflect on their screentime and review past days.
+## Local Setup
 
----
+1. Clone the repository.
 
-## Installing and Opening in Browser
+   ```powershell
+   git clone https://github.com/Br1anSimon/DoomScroll_Debug.git
+   cd DoomScroll_Debug
+   ```
 
-1. Git clone https://github.com/your-username/DoomScroll_Debug.git
-2. cd DoomScroll_Debug
-3. npm install, then npm run dev
-4. DoomScroll Diary is opened in browser 
+2. Install backend dependencies.
 
----
+   ```powershell
+   pip install -r backend/requirements.txt
+   ```
 
-## Tech Stack Summary
+3. Run the Flask app.
 
-Backend: Coded with python and Flask, using SQLite as the database.
+   ```powershell
+   python backend/backend.py
+   ```
 
-Frontend: Coded with HTML and CSS.
+4. Open the app in your browser.
 
-Dockerfile: Deploys and runs app. 
+   ```text
+   http://localhost:8000
+   ```
 
-DoomScroll_Diary.iml: Tells the IDE to treat folder as project module. 
+For backend details, see `backend/README.md`.
 
----
+## Docker
 
-# Team Members and their Contributions
+Build and run the container:
 
-Jacob Klinedinst: Implemented database, schema and connection with UI.
+```powershell
+docker build -t doomscroll-diary .
+docker run --rm -p 8000:8000 doomscroll-diary
+```
 
-Brian: Implemented front end and UI features, collaborated on deployment.
+Then open:
 
-Cole Caron: Collaborated on backend communication with the database and the UI.
+```text
+http://localhost:8000
+```
 
-Lena: Collaborated on docker setup, deployment, ReadMe and frontend implementation.
+## API Summary
 
-Shin: Implemented various features including settings tab and change password.
+- `POST /api/register` creates an account and starts a session.
+- `POST /api/login` starts a session.
+- `POST /api/logout` clears the session.
+- `GET /api/me` returns the current logged-in user.
+- `GET /api/streak` returns the user's login streak.
+- `GET /api/goals`, `POST /api/goals`, `PATCH /api/goals/<id>`, and `DELETE /api/goals/<id>` manage goals.
+- `GET /api/screentime`, `POST /api/screentime`, and `DELETE /api/screentime/<id>` manage screen time logs.
+- `GET /api/trends` returns 7-day screen time summaries.
+- `GET /api/journal`, `POST /api/journal`, and `DELETE /api/journal/<id>` manage diary entries and feeling ratings.
+- `POST /api/change-password` updates the logged-in user's password.
 
-James Casella: Implemented various features including.....
+## Local Files
 
+The SQLite database is local development state and should not be committed:
 
+```text
+backend/doomscroll.db
+```
+
+It is ignored by `backend/.gitignore`.
+
+## Team Members and Contributions
+
+- Jacob Klinedinst: Database schema, backend setup, and UI/database integration.
+- Brian Simon: Frontend and UI features, deployment collaboration.
+- Cole Caron: Backend/database communication and UI integration.
+- Lena: Docker setup, deployment, README, and frontend implementation.
+- Shin: Settings tab and change-password feature.
+- James Casella: Project feature implementation and support.

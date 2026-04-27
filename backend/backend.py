@@ -24,7 +24,7 @@ def set_security_headers(response):
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com; "
         "img-src 'self' data:; "
-        "connect-src 'self' http://localhost:5000 http://127.0.0.1:5000;"
+        "connect-src 'self';"
     )
     return response
 
@@ -34,7 +34,7 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "doomscroll.db")
 
 def get_db():
     if "db" not in g:
-        g.db = sqlite3.connect(DB_PATH)          # NO detect_types
+        g.db = sqlite3.connect(DB_PATH)
         g.db.row_factory = sqlite3.Row
         g.db.execute("PRAGMA foreign_keys = ON")
     return g.db
@@ -46,7 +46,7 @@ def close_db(exc=None):
         db.close()
 
 def init_db():
-    db = sqlite3.connect(DB_PATH)                # NO detect_types
+    db = sqlite3.connect(DB_PATH)
     db.execute("PRAGMA foreign_keys = ON")
     db.executescript("""
         CREATE TABLE IF NOT EXISTS users (
@@ -63,7 +63,6 @@ def init_db():
             user_id INTEGER NOT NULL,
             title TEXT,
             content TEXT NOT NULL,
-            feeling_rating INTEGER,
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now')),
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -97,10 +96,6 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
     """)
-    columns = db.execute("PRAGMA table_info(journal_entries)").fetchall()
-    column_names = {col[1] for col in columns}
-    if "feeling_rating" not in column_names:
-        db.execute("ALTER TABLE journal_entries ADD COLUMN feeling_rating INTEGER")
     db.commit()
     db.close()
 
@@ -303,21 +298,16 @@ def get_screentime():
     ).fetchall()
     return jsonify([dict(r) for r in rows])
 
+
 @app.route("/api/screentime", methods=["POST"])
 @login_required
 def add_screentime():
-    data = request.get_json(force=True)
-    activity = (data.get("activity") or "").strip()
-    try:
-        duration_minutes = int(data.get("duration_minutes") or 0)
-    except (ValueError, TypeError):
-        return jsonify({"error": "duration_minutes must be a number"}), 400
+    data             = request.get_json(force=True)
+    activity         = (data.get("activity") or "").strip()
+    duration_minutes = int(data.get("duration_minutes") or 0)
 
     if not activity or duration_minutes <= 0:
         return jsonify({"error": "activity and duration_minutes (> 0) required"}), 400
-    
-    if duration_minutes > 1440:  # 1440 = minutes in a day
-        return jsonify({"error": "duration_minutes cannot exceed 1440 (24 hours)"}), 400
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     db  = get_db()
@@ -406,21 +396,14 @@ def add_journal():
     data    = request.get_json(force=True)
     content = (data.get("content") or "").strip()
     title   = (data.get("title")   or "").strip() or None
-    feeling_rating = data.get("feeling_rating")
 
     if not content:
         return jsonify({"error": "content required"}), 400
-    try:
-        feeling_rating = int(feeling_rating)
-    except (TypeError, ValueError):
-        return jsonify({"error": "feeling_rating required"}), 400
-    if feeling_rating < 1 or feeling_rating > 5:
-        return jsonify({"error": "feeling_rating must be between 1 and 5"}), 400
 
     db  = get_db()
     cur = db.execute(
-        "INSERT INTO journal_entries (user_id, title, content, feeling_rating) VALUES (?, ?, ?, ?)",
-        (current_user_id(), title, content, feeling_rating)
+        "INSERT INTO journal_entries (user_id, title, content) VALUES (?, ?, ?)",
+        (current_user_id(), title, content)
     )
     db.commit()
     row = db.execute(
@@ -453,9 +436,6 @@ def change_password():
 
     if not current_pw or not new_pw:
         return jsonify({"error": "current_password and new_password are required"}), 400
-
-    if len(new_pw) < 6:
-        return jsonify({"error": "New password must be at least 6 characters"}), 400
 
     db   = get_db()
     user = db.execute("SELECT * FROM users WHERE id = ?", (current_user_id(),)).fetchone()
