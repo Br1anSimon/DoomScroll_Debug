@@ -24,7 +24,7 @@ def set_security_headers(response):
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com; "
         "img-src 'self' data:; "
-        "connect-src 'self' http://localhost:8000 http://127.0.0.1:8000;"
+        "connect-src 'self';"
     )
     return response
 
@@ -464,4 +464,7 @@ def home():
 if __name__ == "__main__":
     init_db()
     print("✦ DoomScroll Diary backend running at http://localhost:5000")
-    app.run(debug=True, port=8000)
+    if __name__ == "__main__":
+    init_db()
+    print("✦ DoomScroll Diary backend running at http://localhost:8000")
+    app.run(debug=True, host="0.0.0.0", port=8000)
