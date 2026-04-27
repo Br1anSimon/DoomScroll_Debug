@@ -58,6 +58,7 @@
 
         document.getElementById("auth-form").addEventListener("submit", async function(e) {
             e.preventDefault();
+
             const username = document.getElementById("username-input").value.trim();
             const password = document.getElementById("password-input").value.trim();
             const errorEl  = document.getElementById("login-error");
