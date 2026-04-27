@@ -303,16 +303,21 @@ def get_screentime():
     ).fetchall()
     return jsonify([dict(r) for r in rows])
 
-
 @app.route("/api/screentime", methods=["POST"])
 @login_required
 def add_screentime():
-    data             = request.get_json(force=True)
-    activity         = (data.get("activity") or "").strip()
-    duration_minutes = int(data.get("duration_minutes") or 0)
+    data = request.get_json(force=True)
+    activity = (data.get("activity") or "").strip()
+    try:
+        duration_minutes = int(data.get("duration_minutes") or 0)
+    except (ValueError, TypeError):
+        return jsonify({"error": "duration_minutes must be a number"}), 400
 
     if not activity or duration_minutes <= 0:
         return jsonify({"error": "activity and duration_minutes (> 0) required"}), 400
+    
+    if duration_minutes > 1440:  # 1440 = minutes in a day
+        return jsonify({"error": "duration_minutes cannot exceed 1440 (24 hours)"}), 400
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     db  = get_db()
@@ -477,5 +482,5 @@ def home():
 
 if __name__ == "__main__":
     init_db()
-    print("✦ DoomScroll Diary backend running at http://localhost:5000")
-    app.run(debug=True, port=5000)
+    print("✦ DoomScroll Diary backend running at http://localhost:8000")
+    app.run(debug=True, host="0.0.0.0", port=8000)

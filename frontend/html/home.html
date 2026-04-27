@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
- 
+
     <header>
         <span class="logo">DoomScroll <span class="accent">Diary</span></span>
         <nav>
@@ -18,18 +18,18 @@
         <button class="nav-btn" id="settings-btn">⚙ Settings</button>
         <button id="logout-btn">Logout</button>
     </header>
- 
+
     <main>
- 
+
         <!-- ── GOALS & STREAKS ── -->
         <section id="goals-section" class="view">
             <h2>Goals & Streaks</h2>
- 
+
             <div class="card streak-card">
                 <div class="streak-number" id="streak-number">—</div>
                 <div class="streak-label">day streak</div>
             </div>
- 
+
             <div class="card">
                 <h3>My Goals</h3>
                 <ul id="goals-list"></ul>
@@ -39,11 +39,11 @@
                 </form>
             </div>
         </section>
- 
+
         <!-- ── SCREEN TIME LOG ── -->
         <section id="screentime-section" class="view hidden">
             <h2>Screen Time Log</h2>
- 
+
             <div class="card">
                 <form id="log-form" onsubmit="addLogEntry(event)">
                     <div class="log-form-row">
@@ -85,21 +85,21 @@
                     <button type="submit">Log It</button>
                 </form>
             </div>
- 
+
             <!-- graph -->
             <div class="card">
                 <h3>Today's Totals</h3>
                 <div class="screentime-graph" id="screentime-graph"></div>
                 <div class="graph-total" id="graph-total"></div>
             </div>
- 
+
             <div id="log-list"></div>
         </section>
- 
+
         <!-- ── DIARY ── -->
         <section id="journal-section" class="view hidden">
             <h2>Dear Diary...</h2>
- 
+
             <div class="card">
                 <form id="journal-form" onsubmit="addDiaryEntry(event)">
                     <textarea id="journal-input" placeholder="Dear diary, today I scrolled for..."></textarea>
@@ -129,14 +129,14 @@
                     <button type="submit">Save Entry</button>
                 </form>
             </div>
- 
+
             <div id="journal-list"></div>
         </section>
- 
+
         <!-- ── TRENDS ── -->
         <section id="trends-section" class="view hidden">
             <h2>Trends</h2>
- 
+
             <div class="trend-stats">
                 <div class="trend-stat-card">
                     <div class="trend-stat-value" id="trend-avg">—</div>
@@ -155,14 +155,14 @@
                     <div class="trend-stat-label">best day</div>
                 </div>
             </div>
- 
+
             <div class="card">
                 <h3>Last 7 Days</h3>
                 <div id="trend-chart">
                     <p style="color:#d4a0b8;font-style:italic;">no data yet...</p>
                 </div>
             </div>
- 
+
             <div class="card">
                 <h3>By App (7 days)</h3>
                 <div class="screentime-graph" id="trend-by-app">
@@ -170,7 +170,7 @@
                 </div>
             </div>
         </section>
- 
+
     </main>
 
     <!-- ── SETTINGS MODAL ── -->
@@ -196,8 +196,8 @@
     </div>
 
     <script>
-        const API = "http://localhost:5000/api";
- 
+        const API = "/api";
+
         // ─── Guard: redirect to login if no session ───────────────────────────
         async function checkAuth() {
             try {
@@ -208,7 +208,7 @@
             }
         }
         checkAuth();
- 
+
         // ── NAV ───────────────────────────────────────────────────────────────
         document.querySelectorAll(".nav-btn").forEach(btn => {
             btn.addEventListener("click", () => {
@@ -219,13 +219,13 @@
                 if (btn.dataset.target === "trends-section") loadTrends();
             });
         });
- 
+
         // ── LOGOUT ────────────────────────────────────────────────────────────
         document.getElementById("logout-btn").addEventListener("click", async () => {
             await fetch(`${API}/logout`, { method: "POST", credentials: "include" });
             window.location.href = "/";
         });
- 
+
         // ── HELPERS ───────────────────────────────────────────────────────────
         function formatTime(mins) {
             const h = Math.floor(mins / 60), m = mins % 60;
@@ -233,15 +233,15 @@
             if (m === 0) return `${h}h`;
             return `${h}h ${m}m`;
         }
- 
+
         function fmtDate(iso) {
             return new Date(iso).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
         }
- 
+
         function fmtShortDate(iso) {
             return new Date(iso + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
         }
- 
+
         // ═══════════════════════════════════════════════════════════════════════
         // STREAK
         // ═══════════════════════════════════════════════════════════════════════
@@ -251,7 +251,7 @@
             document.getElementById("streak-number").textContent = data.streak ?? "—";
         }
         loadStreak();
- 
+
         // ═══════════════════════════════════════════════════════════════════════
         // GOALS
         // ═══════════════════════════════════════════════════════════════════════
@@ -262,7 +262,7 @@
             ul.innerHTML = "";
             list.forEach(g => ul.appendChild(makeGoalLi(g)));
         }
- 
+
         function makeGoalLi(goal) {
             const li = document.createElement("li");
             li.dataset.id = goal.id;
@@ -285,7 +285,7 @@
             });
             return li;
         }
- 
+
         async function addGoal(e) {
             e.preventDefault();
             const input = document.getElementById("goal-input");
@@ -301,14 +301,14 @@
             document.getElementById("goals-list").appendChild(makeGoalLi(goal));
             input.value = "";
         }
- 
+
         loadGoals();
- 
+
         // ═══════════════════════════════════════════════════════════════════════
         // SCREEN TIME
         // ═══════════════════════════════════════════════════════════════════════
         let logData = {};
- 
+
         async function loadScreentime() {
             const res  = await fetch(`${API}/screentime`, { credentials: "include" });
             const list = await res.json();
@@ -321,7 +321,7 @@
             });
             updateGraph();
         }
- 
+
         function makeLogEntry(entry) {
             const div = document.createElement("div");
             div.className   = "log-entry";
@@ -341,13 +341,13 @@
             });
             return div;
         }
- 
+
         function updateGraph() {
             const graph   = document.getElementById("screentime-graph");
             const totalEl = document.getElementById("graph-total");
             const maxVal  = Math.max(...Object.values(logData), 1);
             const total   = Object.values(logData).reduce((a, b) => a + b, 0);
- 
+
             if (Object.keys(logData).length === 0) {
                 graph.innerHTML = '<p style="color:#d4a0b8;font-style:italic;font-size:1rem;">no entries yet today...</p>';
                 totalEl.textContent = "";
@@ -364,18 +364,18 @@
             `).join("");
             totalEl.textContent = `total today: ${formatTime(total)}`;
         }
- 
+
         function toggleCustomApp(select) {
             const row = document.getElementById("custom-app-row");
             row.style.display = select.value === "other" ? "flex" : "none";
         }
- 
+
         async function addLogEntry(e) {
             e.preventDefault();
             const btn = document.querySelector("#log-form button[type='submit']");
             if (btn.disabled) return;
             btn.disabled = true;
- 
+
             const selectEl = document.getElementById("log-app-select");
             const activity = selectEl.value === "other"
                 ? document.getElementById("log-app-custom").value.trim()
@@ -383,9 +383,9 @@
             const hours = parseInt(document.getElementById("log-hours").value);
             const mins  = parseInt(document.getElementById("log-mins").value);
             const duration_minutes = hours * 60 + mins;
- 
+
             if (!activity || duration_minutes === 0) { btn.disabled = false; return; }
- 
+
             const res   = await fetch(`${API}/screentime`, {
                 method: "POST",
                 credentials: "include",
@@ -393,7 +393,7 @@
                 body: JSON.stringify({ activity, duration_minutes }),
             });
             const entry = await res.json();
- 
+
             logData[entry.activity] = (logData[entry.activity] || 0) + entry.duration_minutes;
             updateGraph();
             document.getElementById("log-list").prepend(makeLogEntry(entry));
@@ -401,9 +401,9 @@
             document.getElementById("custom-app-row").style.display = "none";
             btn.disabled = false;
         }
- 
+
         loadScreentime();
- 
+
         // ═══════════════════════════════════════════════════════════════════════
         // JOURNAL
         // ═══════════════════════════════════════════════════════════════════════
@@ -422,7 +422,7 @@
             el.innerHTML = "";
             list.forEach(entry => el.appendChild(makeJournalEntry(entry)));
         }
- 
+
         function makeJournalEntry(entry) {
             const div      = document.createElement("div");
             div.className  = "journal-entry";
@@ -445,7 +445,7 @@
             });
             return div;
         }
- 
+
         async function addDiaryEntry(e) {
             e.preventDefault();
             const input   = document.getElementById("journal-input");
@@ -463,38 +463,38 @@
             document.getElementById("journal-form").reset();
             document.querySelector("input[name='feeling-rating'][value='3']").checked = true;
         }
- 
+
         loadJournal();
- 
+
         // ═══════════════════════════════════════════════════════════════════════
         // TRENDS
         // ═══════════════════════════════════════════════════════════════════════
         async function loadTrends() {
             const res  = await fetch(`${API}/trends`, { credentials: "include" });
             const data = await res.json();
- 
+
             // ── Summary cards ──
             document.getElementById("trend-avg").textContent =
                 data.daily_average > 0 ? formatTime(data.daily_average) : "—";
- 
+
             document.getElementById("trend-top-app").textContent =
                 data.by_app.length > 0 ? data.by_app[0].activity : "—";
- 
+
             document.getElementById("trend-worst").textContent =
                 data.worst_day && data.worst_day.total_minutes > 0
                     ? fmtShortDate(data.worst_day.date) + " · " + formatTime(data.worst_day.total_minutes)
                     : "—";
- 
+
             document.getElementById("trend-best").textContent =
                 data.best_day && data.best_day.total_minutes > 0
                     ? fmtShortDate(data.best_day.date) + " · " + formatTime(data.best_day.total_minutes)
                     : "—";
- 
+
             // ── 7-day bar chart ──
             const chartEl = document.getElementById("trend-chart");
             const maxVal  = Math.max(...data.daily_totals.map(d => d.total_minutes), 1);
             const hasData = data.daily_totals.some(d => d.total_minutes > 0);
- 
+
             if (!hasData) {
                 chartEl.innerHTML = '<p style="color:#d4a0b8;font-style:italic;">no data yet...</p>';
             } else {
@@ -512,11 +512,11 @@
                     </div>
                 `;
             }
- 
+
             // ── By-app breakdown ──
             const appEl  = document.getElementById("trend-by-app");
             const appMax = data.by_app.length > 0 ? data.by_app[0].total_minutes : 1;
- 
+
             if (data.by_app.length === 0) {
                 appEl.innerHTML = '<p style="color:#d4a0b8;font-style:italic;">no data yet...</p>';
             } else {
@@ -593,6 +593,6 @@
             }
         });
     </script>
- 
+
 </body>
 </html>
