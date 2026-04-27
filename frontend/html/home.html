@@ -525,11 +525,12 @@
                 msgEl.textContent = "new passwords don't match!";
                 return;
             }
+            /*
             if (newPw.length < 6) {
                 msgEl.style.color = "#e57373";
                 msgEl.textContent = "password must be at least 6 characters";
                 return;
-            }
+            }*/
 
             try {
                 const res  = await fetch(`${API}/change-password`, {
