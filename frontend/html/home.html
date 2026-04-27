@@ -103,6 +103,7 @@
             <div class="card">
                 <form id="journal-form" onsubmit="addDiaryEntry(event)">
                     <textarea id="journal-input" placeholder="Dear diary, today I scrolled for..."></textarea>
+                    <input type="hidden" id="feeling-rating-value" value="3">
                     <div class="feeling-picker" role="radiogroup" aria-label="How are you feeling?">
                         <p>How are you feeling?</p>
                         <label>
@@ -415,6 +416,27 @@
             5: "&#128516;",
         };
 
+        function selectedFeelingRating() {
+            return Number(document.getElementById("feeling-rating-value").value || 3);
+        }
+
+        function setFeelingRating(value) {
+            const rating = Math.min(Math.max(Number(value) || 3, 1), 5);
+            document.getElementById("feeling-rating-value").value = String(rating);
+            document.querySelector(`input[name='feeling-rating'][value='${rating}']`).checked = true;
+        }
+
+        document.querySelectorAll("input[name='feeling-rating']").forEach(input => {
+            input.addEventListener("change", () => setFeelingRating(input.value));
+        });
+
+        document.querySelectorAll(".feeling-picker label").forEach(label => {
+            label.addEventListener("click", () => {
+                const input = label.querySelector("input[name='feeling-rating']");
+                setFeelingRating(input.value);
+            });
+        });
+
         async function loadJournal() {
             const res  = await fetch(`${API}/journal`, { credentials: "include" });
             const list = await res.json();
@@ -427,7 +449,8 @@
             const div      = document.createElement("div");
             div.className  = "journal-entry";
             div.dataset.id = entry.id;
-            const feelingEmoji = FEELING_EMOJIS[entry.feeling_rating] || "&#128528;";
+            const feelingRating = Math.min(Math.max(Number(entry.feeling_rating) || 3, 1), 5);
+            const feelingEmoji = FEELING_EMOJIS[feelingRating];
             div.innerHTML  = `
                 <div class="entry-text">${entry.content}</div>
                 <div class="entry-feeling">
@@ -450,18 +473,19 @@
             e.preventDefault();
             const input   = document.getElementById("journal-input");
             const content = input.value.trim();
-            const feeling = document.querySelector("input[name='feeling-rating']:checked");
+            const feelingRating = selectedFeelingRating();
             if (!content) return;
             const res   = await fetch(`${API}/journal`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content, feeling_rating: feeling.value }),
+                body: JSON.stringify({ content, feeling_rating: feelingRating }),
             });
             const entry = await res.json();
+            if (!res.ok) return;
             document.getElementById("journal-list").prepend(makeJournalEntry(entry));
             document.getElementById("journal-form").reset();
-            document.querySelector("input[name='feeling-rating'][value='3']").checked = true;
+            setFeelingRating(3);
         }
 
         loadJournal();
