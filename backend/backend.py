@@ -461,10 +461,8 @@ def root():
 def home():
     return app.send_static_file("html/home.html")
 
+
 if __name__ == "__main__":
-    init_db()
-    print("✦ DoomScroll Diary backend running at http://localhost:5000")
-    if __name__ == "__main__":
-    init_db()
-    print("✦ DoomScroll Diary backend running at http://localhost:8000")
-    app.run(debug=True, host="0.0.0.0", port=8000)
+init_db()
+print("✦ DoomScroll Diary backend running at http://localhost:8000")
+app.run(debug=True, host="0.0.0.0", port=8000)
