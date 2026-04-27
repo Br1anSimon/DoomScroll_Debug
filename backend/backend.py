@@ -14,7 +14,7 @@ app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "../
 app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(32))
 CORS(app, supports_credentials=True)
 
-# ── Security headers ───────────────────────────────────────────────────────────
+# ── Security headers ──────────────────────────────────────────────────────────
 
 @app.after_request
 def set_security_headers(response):
@@ -63,7 +63,6 @@ def init_db():
             user_id INTEGER NOT NULL,
             title TEXT,
             content TEXT NOT NULL,
-            feeling_rating INTEGER,
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now')),
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -97,10 +96,6 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
     """)
-    columns = db.execute("PRAGMA table_info(journal_entries)").fetchall()
-    column_names = {col[1] for col in columns}
-    if "feeling_rating" not in column_names:
-        db.execute("ALTER TABLE journal_entries ADD COLUMN feeling_rating INTEGER")
     db.commit()
     db.close()
 
@@ -303,21 +298,16 @@ def get_screentime():
     ).fetchall()
     return jsonify([dict(r) for r in rows])
 
+
 @app.route("/api/screentime", methods=["POST"])
 @login_required
 def add_screentime():
-    data = request.get_json(force=True)
-    activity = (data.get("activity") or "").strip()
-    try:
-        duration_minutes = int(data.get("duration_minutes") or 0)
-    except (ValueError, TypeError):
-        return jsonify({"error": "duration_minutes must be a number"}), 400
+    data             = request.get_json(force=True)
+    activity         = (data.get("activity") or "").strip()
+    duration_minutes = int(data.get("duration_minutes") or 0)
 
     if not activity or duration_minutes <= 0:
         return jsonify({"error": "activity and duration_minutes (> 0) required"}), 400
-    
-    if duration_minutes > 1440:  # 1440 = minutes in a day
-        return jsonify({"error": "duration_minutes cannot exceed 1440 (24 hours)"}), 400
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     db  = get_db()
@@ -406,21 +396,14 @@ def add_journal():
     data    = request.get_json(force=True)
     content = (data.get("content") or "").strip()
     title   = (data.get("title")   or "").strip() or None
-    feeling_rating = data.get("feeling_rating")
 
     if not content:
         return jsonify({"error": "content required"}), 400
-    try:
-        feeling_rating = int(feeling_rating)
-    except (TypeError, ValueError):
-        return jsonify({"error": "feeling_rating required"}), 400
-    if feeling_rating < 1 or feeling_rating > 5:
-        return jsonify({"error": "feeling_rating must be between 1 and 5"}), 400
 
     db  = get_db()
     cur = db.execute(
-        "INSERT INTO journal_entries (user_id, title, content, feeling_rating) VALUES (?, ?, ?, ?)",
-        (current_user_id(), title, content, feeling_rating)
+        "INSERT INTO journal_entries (user_id, title, content) VALUES (?, ?, ?)",
+        (current_user_id(), title, content)
     )
     db.commit()
     row = db.execute(
@@ -444,7 +427,7 @@ def delete_journal(entry_id):
 
 # ── Account settings ───────────────────────────────────────────────────────────
 
-@app.route("/api/change-password", methods=["POST"])
+@app.route("/api/change-password", methods=["POST"]) # this is for changing the password 
 @login_required
 def change_password():
     data       = request.get_json(force=True)
@@ -454,8 +437,6 @@ def change_password():
     if not current_pw or not new_pw:
         return jsonify({"error": "current_password and new_password are required"}), 400
 
-    if len(new_pw) < 6:
-        return jsonify({"error": "New password must be at least 6 characters"}), 400
 
     db   = get_db()
     user = db.execute("SELECT * FROM users WHERE id = ?", (current_user_id(),)).fetchone()
@@ -482,5 +463,5 @@ def home():
 
 if __name__ == "__main__":
     init_db()
-    print("✦ DoomScroll Diary backend running at http://localhost:8000")
-    app.run(debug=True, host="0.0.0.0", port=8000)
+    print("✦ DoomScroll Diary backend running at http://localhost:5000")
+    app.run(debug=True, port=5000)
