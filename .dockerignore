@@ -1,0 +1,5 @@
+backend/doomscroll.db
+backend/__pycache__/
+*.pyc
+.git/
+.idea/

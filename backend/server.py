@@ -1,3 +1,10 @@
+"""Legacy FastAPI prototype.
+
+The active application for this project is `backend.py`, which serves the
+Flask API and frontend pages. Keep this file only as reference unless the team
+decides to migrate back to FastAPI.
+"""
+
 import os
 import sqlite3
 from datetime import datetime, timedelta
