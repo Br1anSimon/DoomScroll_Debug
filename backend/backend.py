@@ -14,7 +14,7 @@ app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "../
 app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(32))
 CORS(app, supports_credentials=True)
 
-# ── Security headers ──────────────────────────────────────────────────────────
+# ── Security headers ───────────────────────────────────────────────────────────
 
 @app.after_request
 def set_security_headers(response):
@@ -34,7 +34,7 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "doomscroll.db")
 
 def get_db():
     if "db" not in g:
-        g.db = sqlite3.connect(DB_PATH)          # NO detect_types
+        g.db = sqlite3.connect(DB_PATH)
         g.db.row_factory = sqlite3.Row
         g.db.execute("PRAGMA foreign_keys = ON")
     return g.db
@@ -46,7 +46,7 @@ def close_db(exc=None):
         db.close()
 
 def init_db():
-    db = sqlite3.connect(DB_PATH)                # NO detect_types
+    db = sqlite3.connect(DB_PATH)
     db.execute("PRAGMA foreign_keys = ON")
     db.executescript("""
         CREATE TABLE IF NOT EXISTS users (
@@ -427,7 +427,7 @@ def delete_journal(entry_id):
 
 # ── Account settings ───────────────────────────────────────────────────────────
 
-@app.route("/api/change-password", methods=["POST"]) # this is for changing the password 
+@app.route("/api/change-password", methods=["POST"])
 @login_required
 def change_password():
     data       = request.get_json(force=True)
@@ -436,7 +436,6 @@ def change_password():
 
     if not current_pw or not new_pw:
         return jsonify({"error": "current_password and new_password are required"}), 400
-
 
     db   = get_db()
     user = db.execute("SELECT * FROM users WHERE id = ?", (current_user_id(),)).fetchone()
@@ -461,8 +460,7 @@ def root():
 def home():
     return app.send_static_file("html/home.html")
 
-
 if __name__ == "__main__":
-init_db()
-print("✦ DoomScroll Diary backend running at http://localhost:8000")
-app.run(debug=True, host="0.0.0.0", port=8000)
+    init_db()
+    print("✦ DoomScroll Diary backend running at http://localhost:8000")
+    app.run(debug=True, host="0.0.0.0", port=8000)
