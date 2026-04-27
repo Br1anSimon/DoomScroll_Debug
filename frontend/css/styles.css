@@ -527,6 +527,71 @@ select option { background-color: #fff8fb; color: #3b0a1f; font-family: sans-ser
  
 /* ── DIARY ENTRIES ───────────────────────────────────── */
 #journal-form { display: flex; flex-direction: column; gap: 12px; }
+
+.feeling-picker {
+    border: 1px dashed #f48fb1;
+    background-color: rgba(252, 228, 236, 0.55);
+    display: grid;
+    grid-template-columns: 1fr repeat(5, 44px);
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+}
+
+.feeling-picker p {
+    color: #9c4f72;
+    font-size: 1rem;
+    font-style: italic;
+}
+
+.feeling-picker label {
+    cursor: pointer;
+    height: 44px;
+    position: relative;
+}
+
+.feeling-picker input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.feeling-picker span {
+    align-items: center;
+    background-color: #fff8fb;
+    border: 1px solid #f8bbd0;
+    border-radius: 2px;
+    display: flex;
+    font-size: 1.45rem;
+    height: 44px;
+    justify-content: center;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    width: 44px;
+}
+
+.feeling-picker label:hover span,
+.feeling-picker input:focus + span {
+    border-color: #c2185b;
+    box-shadow: 2px 2px 0 rgba(59, 10, 31, 0.12);
+}
+
+.feeling-picker input:checked + span {
+    background-color: #fce4ec;
+    border-color: #c2185b;
+    box-shadow: 2px 2px 0 rgba(194, 24, 91, 0.28);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 520px) {
+    .feeling-picker {
+        grid-template-columns: repeat(5, 44px);
+        justify-content: space-between;
+    }
+
+    .feeling-picker p {
+        grid-column: 1 / -1;
+    }
+}
  
 .journal-entry {
     background-color: #fff8fb;
@@ -553,6 +618,26 @@ select option { background-color: #fff8fb; color: #3b0a1f; font-family: sans-ser
     line-height: 2;
     margin-bottom: 10px;
     color: #3b0a1f;
+}
+
+.entry-feeling {
+    align-items: center;
+    border-top: 1px dashed #f8bbd0;
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 8px;
+}
+
+.entry-feeling-label {
+    color: #9c4f72;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+.entry-feeling-emoji {
+    font-size: 1.4rem;
+    line-height: 1;
 }
  
 .entry-meta {
