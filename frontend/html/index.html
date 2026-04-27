@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
- 
+
     <section id="login-section">
         <div class="login-card">
- 
+
             <div class="diary-cover">
                 <h1>DoomScroll <span style="opacity:0.85;">Diary</span></h1>
                 <p class="subtitle">my private diary — keep out!!</p>
@@ -17,14 +17,14 @@
                     <span class="lock-icon">🔒</span>
                 </div>
             </div>
- 
+
             <div class="diary-pages">
                 <!-- Toggle between login and register -->
                 <div id="mode-toggle" style="text-align:center; margin-bottom:12px; font-family:'Caveat',cursive; font-size:1rem; color:#d4a0b8;">
                     <span id="toggle-text">New here?</span>
                     <a href="#" id="mode-link" style="color:#c2185b; margin-left:6px;">Create an account</a>
                 </div>
- 
+
                 <form id="auth-form">
                     <!-- Register-only field -->
                     <input type="text" id="name-input" placeholder="full name..." style="display:none;" />
@@ -34,17 +34,17 @@
                     <input type="password" id="password-input" placeholder="secret password..." required />
                     <button type="submit" id="submit-btn">unlock ✦</button>
                 </form>
- 
+
                 <p id="login-error" class="error-text"></p>
             </div>
- 
+
         </div>
     </section>
- 
+
     <script>
-        const API = "http://localhost:5000/api";
+        const API = "/api";
         let isRegister = false;
- 
+
         document.getElementById("mode-link").addEventListener("click", (e) => {
             e.preventDefault();
             isRegister = !isRegister;
@@ -55,14 +55,14 @@
             document.getElementById("submit-btn").textContent    = isRegister ? "sign up ✦" : "unlock ✦";
             document.getElementById("login-error").textContent   = "";
         });
- 
+
         document.getElementById("auth-form").addEventListener("submit", async function(e) {
             e.preventDefault();
             const username = document.getElementById("username-input").value.trim();
             const password = document.getElementById("password-input").value.trim();
             const errorEl  = document.getElementById("login-error");
             if (!username || !password) return;
- 
+
             const endpoint = isRegister ? `${API}/register` : `${API}/login`;
             const body     = isRegister
                 ? {
@@ -72,7 +72,7 @@
                     email: document.getElementById("email-input").value.trim() || undefined,
                   }
                 : { username, password };
- 
+
             try {
                 const res  = await fetch(endpoint, {
                     method: "POST",
@@ -81,22 +81,22 @@
                     body: JSON.stringify(body),
                 });
                 const data = await res.json();
- 
+
                 if (!res.ok) {
                     errorEl.textContent = data.error || "Something went wrong :(";
                     return;
                 }
- 
+
                 // Store name for greeting in home.html
                 sessionStorage.setItem("username", data.username);
                 sessionStorage.setItem("name",     data.name);
                 window.location.href = "/home";
- 
+
             } catch (err) {
                 errorEl.textContent = "Can't reach server — is backend.py running?";
             }
         });
     </script>
- 
+
 </body>
 </html>
